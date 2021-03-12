@@ -129,3 +129,4 @@ import_data.py
 
 # files
 get-pip.pyaminoacid/__pycache__/*
+__pycache__/

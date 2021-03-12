@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework import routers
+from aminoacid import views as aminoacid_views
+
+router = routers.DefaultRouter()
+router.register(r"aminoacids", aminoacid_views.AminoAcidViewSet)
 
 urlpatterns = [
-    path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
+    path("", include(router.urls)),
+    path('polls/', include('polls.urls'))
 ]
