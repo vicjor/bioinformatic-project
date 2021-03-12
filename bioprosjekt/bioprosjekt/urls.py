@@ -23,6 +23,6 @@ router.register(r"aminoacids", aminoacid_views.AminoAcidViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     path('polls/', include('polls.urls'))
 ]

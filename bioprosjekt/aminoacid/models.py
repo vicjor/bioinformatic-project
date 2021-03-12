@@ -22,10 +22,7 @@ class AminoAcid(models.Model):
     type = models.CharField(null=False, blank=False, max_length=10)
     partition_number = models.IntegerField(
         null=False, blank=False)
-    sequence_1 = models.CharField(null=False, blank=False, max_length=70
-                                  )
-    sequence_2 = models.CharField(null=False, blank=False, max_length=70
-                                  )
+    sequence = models.CharField(null=False, blank=False, max_length=140)
 
     def __str__(self) -> None:
-        return "Uniprot: {} Kingdom: {} Type: {} PartitionNumber: {} Sequence_1:{} Sequence_2:{}".format(self.uniprot, self.kingdom, self.type, self.partition_number, self.sequence_1, self.sequence_2)
+        return "Uniprot: {} Kingdom: {} Type: {} PartitionNumber: Sequence :{}".format(self.uniprot, self.kingdom, self.type, self.partition_number, self.sequence)

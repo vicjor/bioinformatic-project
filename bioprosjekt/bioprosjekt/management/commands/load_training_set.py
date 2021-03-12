@@ -12,7 +12,8 @@ class Command(BaseCommand):
     help = "Import training data from file"
 
     def add_arguments(self, parser):
-        parser.add_argument("--input_path", type=open)
+        parser.add_argument("--input_path", type=open,
+                            default=os.getenv("PWD") + "/data/train_set.fasta")
 
     def handle(self, *args, **options):
         try:
@@ -26,18 +27,18 @@ class Command(BaseCommand):
 
                     count += 1
                 elif count == 1:
-                    sequence_1 = line
+                    sequence = line.replace("\n", "")
 
                     count += 1
                 elif count == 2:
-                    sequence_2 = line
+                    sequence += line.replace("\n", "")
 
                     ac = AminoAcid.objects.create(
-                        uniprot=headers[0], kingdom=headers[1], type=headers[2], partition_number=headers[3], sequence_1=sequence_1, sequence_2=sequence_2)
+                        uniprot=headers[0][1:], kingdom=headers[1], type=headers[2], partition_number=headers[3], sequence=sequence)
                     ac.save()
                     count = 0
                     object_list.append(ac)
-            print(len(object_list))
+            print(len(object_list), " AminoAcids imported")
         except Exception as e:
             print(e)
         return
