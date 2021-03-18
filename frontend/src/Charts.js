@@ -1,4 +1,3 @@
-import react from 'react'
 import GoogleChart from 'react-google-charts'
 
 function Charts(){
