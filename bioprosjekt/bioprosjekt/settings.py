@@ -18,6 +18,7 @@ import dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Use SQLite if .env exists (for running locally / in development)
 # .env will never exist on Heroku, and dotenv.load(dotenv_file) will never run on Heroku
