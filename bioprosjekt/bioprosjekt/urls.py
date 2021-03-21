@@ -14,14 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from rest_framework.response import Response
 from django.urls import include, path
 from rest_framework import routers
+from rest_framework.decorators import api_view
 from bioprosjekt.jaspar import views as jaspar_views
 
 router = routers.DefaultRouter()
 
 
+@api_view(http_method_names=["GET"])
+def root_view(request):
+    return Response("Try /matrices or /score/<matrix_id>?sequence=<DNA-sequence>")
+
+
 urlpatterns = [
+    path("", root_view, name="root"),
     path('admin/', admin.site.urls),
     path("matrices", jaspar_views.matrices, name="matrices"),
     path("score/<matrix_id>", jaspar_views.get_pwm, name="matrix_pfm")
