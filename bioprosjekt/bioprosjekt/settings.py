@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
+import dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,7 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Use SQLite if .env exists (for running locally / in development)
 # .env will never exist on Heroku, and dotenv.load(dotenv_file) will never run on Heroku
 dotenv_file = os.path.join(BASE_DIR, ".env")
-print(dotenv_file)
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -29,7 +31,7 @@ print(dotenv_file)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'kw(vr=xw17ixs(w*zrg34^!b)iwu_7s!m!r_!bp!8mn=okw&nb'
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'bioprosjekt.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'bioprosjekt.bioprosjekt.settings'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -56,7 +58,7 @@ INSTALLED_APPS = [
     'gunicorn',
     'rest_framework',
     "bioprosjekt",
-    "jaspar"
+    "bioprosjekt.jaspar"
 ]
 
 MIDDLEWARE = [
@@ -69,7 +71,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'bioprosjekt.urls'
+ROOT_URLCONF = 'bioprosjekt.bioprosjekt.urls'
 
 TEMPLATES = [
     {
@@ -87,7 +89,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bioprosjekt.wsgi.application'
+WSGI_APPLICATION = 'bioprosjekt.bioprosjekt.wsgi.application'
 
 
 # Database
