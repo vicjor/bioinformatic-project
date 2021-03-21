@@ -59,8 +59,6 @@ INSTALLED_APPS = [
     "bioprosjekt.jaspar"
 ]
 
-heroku config: set DJANGO_ALLOWED_HOSTS = .herokuapp.com, tfbs-backend.herokuapp.com
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
