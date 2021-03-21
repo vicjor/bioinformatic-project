@@ -40,9 +40,23 @@ if (os.getenv("DEBUG")):
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['*'
-                 ]
 
+ALLOWED_HOSTS = ['*']
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding', 
+    'authorization', 
+    'content-type', 
+    'dnt', 
+    'origin', 
+    'user-agent', 
+    'x-csrftoken', 
+    'x-requested-with',
+]
 
 # Application definition
 
@@ -55,6 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gunicorn',
     'rest_framework',
+    'corsheaders',
     "bioprosjekt",
     "bioprosjekt.jaspar"
 ]
@@ -69,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 
 ]
 
