@@ -29,14 +29,15 @@ test_pfm = {
 
 
 @api_view(http_method_names=["GET"])
-def get_pwm(request, matrix_id="PF0144.1"):
+def get_pwm(request, matrix_id):
     """
     param: matrix_id as input to API at /get_pwm/<matrix_id>
-    returns a PWM (Position Weight matrix)
+    returns a score for each position in the sequence 
 
     First fetches the PFM (Position Frequency Matrix) from Jaspar.
     Then calculates PPM (Position Probability Matrix) based on PFM
-    Finally, use the PPM to calculate the PWM
+    Next use the PPM to calculate the PWM
+    Use PWM to calculate score
     """
 
     if len(request.query_params) > 0:
