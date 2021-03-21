@@ -40,10 +40,8 @@ if (os.getenv("DEBUG")):
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "http://localhost",
-]
+ALLOWED_HOSTS = ['*'
+                 ]
 
 
 # Application definition
@@ -60,6 +58,9 @@ INSTALLED_APPS = [
     "bioprosjekt",
     "bioprosjekt.jaspar"
 ]
+
+heroku config: set DJANGO_ALLOWED_HOSTS = .herokuapp.com, tfbs-backend.herokuapp.com
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
