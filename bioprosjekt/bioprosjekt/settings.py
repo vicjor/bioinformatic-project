@@ -10,11 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+import dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Use SQLite if .env exists (for running locally / in development)
+# .env will never exist on Heroku, and dotenv.load(dotenv_file) will never run on Heroku
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -22,8 +31,15 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'kw(vr=xw17ixs(w*zrg34^!b)iwu_7s!m!r_!bp!8mn=okw&nb'
 
+os.environ['DJANGO_SETTINGS_MODULE'] = 'bioprosjekt.bioprosjekt.settings'
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if (os.getenv("DEBUG")):
+    DEBUG = True
+else:
+    DEBUG = False
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -51,12 +67,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'gunicorn',
     'rest_framework',
     'corsheaders',
     "bioprosjekt",
-    "aminoacid",
-    "jaspar"
+    "bioprosjekt.jaspar"
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,10 +83,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+
 ]
 
-ROOT_URLCONF = 'bioprosjekt.urls'
+ROOT_URLCONF = 'bioprosjekt.bioprosjekt.urls'
 
 TEMPLATES = [
     {
@@ -87,7 +106,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bioprosjekt.wsgi.application'
+WSGI_APPLICATION = 'bioprosjekt.bioprosjekt.wsgi.application'
 
 
 # Database
@@ -96,7 +115,7 @@ WSGI_APPLICATION = 'bioprosjekt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -138,3 +157,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

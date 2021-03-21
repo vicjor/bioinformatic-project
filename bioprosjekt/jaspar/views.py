@@ -29,15 +29,27 @@ test_pfm = {
 
 
 @api_view(http_method_names=["GET"])
-def get_pwm(request, matrix_id="PF0144.1"):
+def get_pwm(request, matrix_id):
     """
     param: matrix_id as input to API at /get_pwm/<matrix_id>
-    returns a PWM (Position Weight matrix)
+    returns a score for each position in the sequence 
 
     First fetches the PFM (Position Frequency Matrix) from Jaspar.
     Then calculates PPM (Position Probability Matrix) based on PFM
-    Finally, use the PPM to calculate the PWM
+    Next use the PPM to calculate the PWM
+    Use PWM to calculate score
     """
+
+    if len(request.query_params) > 0:
+        sequence = request.query_params["sequence"]
+        alphabet = "acgt"
+
+        # Ignore invalid sequences
+        for letter in sequence:
+            if letter not in alphabet:
+                return Response("A DNA sequence may only contain the letters A, C, G and T.")
+    else:
+        sequence = "ccattagttgctgacttcac"
 
     response = requests.get(
         'http://jaspar.genereg.net/api/v1/matrix/{}'.format(matrix_id))
@@ -52,8 +64,11 @@ def get_pwm(request, matrix_id="PF0144.1"):
     # Turn PFM into PPM
     ppm = pfm_to_ppm(pfm)
     pwm = ppm_to_pwm(ppm)
+    prob = tf_probability(pwm, sequence)
+    if len(prob) == 0:
+        return Response("The sequence you provided was not long enough for this motif.")
 
-    return Response({"pwm": pwm})
+    return Response({"probability": prob})
 
 
 def pfm_to_ppm(pfm):
@@ -78,11 +93,12 @@ def pfm_to_ppm(pfm):
     T_pwm = []
     ppm = [A_pwm, C_pwm, G_pwm, T_pwm]
 
+    # Adding pseudocount to avoid -inf values
     for i in range(len(A)):
-        ppm[0].append(A[i]/cols[i])
-        ppm[1].append(C[i]/cols[i])
-        ppm[2].append(G[i]/cols[i])
-        ppm[3].append(T[i]/cols[i])
+        ppm[0].append((A[i] + 1/len(A))/(cols[i] + 1))
+        ppm[1].append((C[i] + 1/len(C))/(cols[i] + 1))
+        ppm[2].append((G[i] + 1/len(G))/(cols[i] + 1))
+        ppm[3].append((T[i] + 1/len(T))/(cols[i] + 1))
 
     return ppm
 
@@ -101,22 +117,10 @@ def ppm_to_pwm(ppm, bm=0.25):
     T_ppm = ppm[3]
 
     for i in range(len(A_ppm)):
-        if A_ppm[i] == 0:
-            A_pwm = '-inf'
-        else:
-            A_pwm = log2(A_ppm[i]/bm)
-        if C_ppm[i] == 0:
-            C_pwm = '-inf'
-        else:
-            C_pwm = log2(C_ppm[i]/bm)
-        if G_ppm[i] == 0:
-            G_pwm = '-inf'
-        else:
-            G_pwm = log2(G_ppm[i]/bm)
-        if T_ppm[i] == 0:
-            T_pwm = '-inf'
-        else:
-            T_pwm = log2(T_ppm[i]/bm)
+        A_pwm = log2(A_ppm[i]/bm)
+        C_pwm = log2(C_ppm[i]/bm)
+        G_pwm = log2(G_ppm[i]/bm)
+        T_pwm = log2(T_ppm[i]/bm)
 
         pwm["A"].append(A_pwm)
         pwm["C"].append(C_pwm)
@@ -124,3 +128,26 @@ def ppm_to_pwm(ppm, bm=0.25):
         pwm["T"].append(T_pwm)
 
     return pwm
+
+
+def tf_probability(pwm, sequence):
+    """
+    param pwm: A Position Weight Matrix
+    param sequence: A DNA sequence
+    returns: A list with TF probability each word in the sequence with a score > 0 
+    """
+    matrix_length = len(pwm['A'])
+    sequence_length = len(sequence)
+
+    sequence_probability = []
+
+    for i in range(sequence_length - matrix_length + 1):
+        total_probability = 0
+        word = ""
+        for j in range(matrix_length):
+            # Add probability for each letter in sequence
+            total_probability += pwm[sequence[i+j].capitalize()][j]
+            word += sequence[i+j]
+        sequence_probability.append({i: (word, total_probability)})
+
+    return sequence_probability
