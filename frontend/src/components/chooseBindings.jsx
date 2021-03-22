@@ -8,13 +8,20 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 
+let URL;
+if (process.env.NODE_ENV === "development") {
+    URL = process.env.REACT_APP_URL;
+    console.log(URL);
+} else {
+    URL = "http://tfbs-backend.herokuapp.com/";
+}
 
 const ChooseBindings = (props) => {
     const [matrices, setMatrices] = useState(0)
 
     useEffect(() => {
         if(matrices === 0){
-            get_data('http://tfbs-backend.herokuapp.com/matrices', setMatrices)
+            get_data(`${URL}matrices`, setMatrices)
         }
     },[])
 

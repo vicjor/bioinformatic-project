@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 
 // NBNB: NOT IN USE ANYMORE, KEEP FOR NOW
+let URL;
+if (process.env.NODE_ENV === "development") {
+	URL = process.env.REACT_APP_URL;
+	console.log(URL);
+} else {
+	URL = "http://tfbs-backend.herokuapp.com/";
+}
 export default function Forms(props) {
 	const [matrices, setMatrices] = useState(0);
 	const [chosenMatrix, setChosenMatrix] = useState("no chosen matrix");
 	const [pwm, setPwm] = useState(0);
 
 	useEffect(() => {
-		get_data("http://localhost:8000/matrices", setMatrices);
+		get_data(`${URL}matrices`, setMatrices);
 	}, []);
 
 	useEffect(() => {
@@ -18,7 +25,7 @@ export default function Forms(props) {
 
 	const getPwm = () => {
 		if (chosenMatrix != "no chosen matrix") {
-			get_data(`http://localhost:8000/score/${chosenMatrix}`, setPwm);
+			get_data(`${URL}score/${chosenMatrix}`, setPwm);
 		}
 	};
 
