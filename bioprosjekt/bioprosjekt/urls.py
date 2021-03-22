@@ -32,5 +32,5 @@ urlpatterns = [
     path("", root_view, name="root"),
     path('admin/', admin.site.urls),
     path("matrices", jaspar_views.matrices, name="matrices"),
-    path("score/<matrix_id>", jaspar_views.get_pwm, name="matrix_pfm")
+    path("score/<matrix_id>", jaspar_views.get_score, name="score")
 ]
