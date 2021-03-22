@@ -5,6 +5,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 
 function App() {
+  // TODO: Finne ut noe smud å skrive i header.
   return (
     <div className="App">
       <header className="App-header">
