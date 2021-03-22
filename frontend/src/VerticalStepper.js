@@ -37,7 +37,7 @@ export default function VerticalStepper() {
             case 1:
                 return <ChooseDNA chosenDNAsequences={chosenDNAsequences} setChosenDNAsequences={setChosenDNAsequences} />
             case 2:
-                return <DisplayResults />
+                return <DisplayResults matrices={chosenMatrices} sequence={chosenDNAsequences}/>
             default:
                 return <p>Ugh. Det har oppstått en feilg</p>
         }
@@ -59,7 +59,7 @@ export default function VerticalStepper() {
                                     onClick={handleBack}
                                     className="button"
                                 >
-                                    Back
+                                    Tilbake
                                 </Button>
                                 <Button
                                     variant="contained"
@@ -67,7 +67,7 @@ export default function VerticalStepper() {
                                     onClick={handleNext}
                                     className="button"
                                 >
-                                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                    {activeStep === steps.length - 1 ? 'Avslutt' : 'Neste'}
                                 </Button>
                             </div>
                         </StepContent>
@@ -75,9 +75,6 @@ export default function VerticalStepper() {
                 ))}
 
             </Stepper>
-            <p>Litt debugging: </p>
-            <p>Bindinger: {chosenMatrices.map((key, index) => key + ", ")}</p>
-            <p>DNA seqs: {chosenDNAsequences}</p>
         </div>
     )
 }

@@ -14,8 +14,7 @@ const ChooseBindings = (props) => {
 
     useEffect(() => {
         if(matrices === 0){
-            get_data('http://localhost:8000/matrices', setMatrices)
-            console.log("fetch")
+            get_data('http://tfbs-backend.herokuapp.com/matrices', setMatrices)
         }
     },[])
 
@@ -29,7 +28,8 @@ const ChooseBindings = (props) => {
         props.setChosenMatrices(event.target.value);
     };
 
-    // TODO: Denne bruker alt for lang tid. Bedre å bruke autocomplete, https://material-ui.com/components/autocomplete/
+    // TODO: Denne bruker alt for lang tid på å åpne. Bedre å bruke autocomplete, https://material-ui.com/components/autocomplete/
+    // bør ideelt kunne søke, men det er sikkert ikke så veldig nøye hvis det er stress å fikse
     return(
         <div>
             <br />
