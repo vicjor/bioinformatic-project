@@ -29,15 +29,15 @@ test_pfm = {
 
 
 @api_view(http_method_names=["GET"])
-def get_pwm(request, matrix_id):
+def get_score(request, matrix_id):
     """
-    param: matrix_id as input to API at /get_pwm/<matrix_id>
-    returns a score for each position in the sequence 
+    Enter a DNA sequence with the query parameter 'sequence'. If none is provided, a default sequence is used.
 
-    First fetches the PFM (Position Frequency Matrix) from Jaspar.
-    Then calculates PPM (Position Probability Matrix) based on PFM
-    Next use the PPM to calculate the PWM
-    Use PWM to calculate score
+    How is the score calculated?
+    First the PFM (Position Frequency Matrix) is fetched from the Jaspar database.
+    Then the PFM is transformed to a PPM (Position Probability Matrix)
+    Next the PPM is transformed to a PWM (Position Weight Matrix)
+    Finally the PWM is used to calculate a score for each position in the provided sequence
     """
 
     if len(request.query_params) > 0:
@@ -46,10 +46,10 @@ def get_pwm(request, matrix_id):
 
         # Ignore invalid sequences
         for letter in sequence:
-            if letter not in alphabet:
-                return Response("A DNA sequence may only contain the letters A, C, G and T.")
+            if letter.lower() not in alphabet:
+                return Response("A DNA sequence may only contain the letters A, C, G and T.", status=400)
     else:
-        sequence = "ccattagttgctgacttcac"
+        sequence = "ccattagttgctgacttcacgtactaggcatcgt"
 
     response = requests.get(
         'http://jaspar.genereg.net/api/v1/matrix/{}'.format(matrix_id))
@@ -64,11 +64,11 @@ def get_pwm(request, matrix_id):
     # Turn PFM into PPM
     ppm = pfm_to_ppm(pfm)
     pwm = ppm_to_pwm(ppm)
-    prob = tf_probability(pwm, sequence)
-    if len(prob) == 0:
-        return Response("The sequence you provided was not long enough for this motif.")
+    score = tf_score(pwm, sequence)
+    if len(score) == 0:
+        return Response("The sequence you provided was not long enough for this motif.", status=400)
 
-    return Response({"probability": prob})
+    return Response({"score": score}, status=200)
 
 
 def pfm_to_ppm(pfm):
@@ -130,11 +130,11 @@ def ppm_to_pwm(ppm, bm=0.25):
     return pwm
 
 
-def tf_probability(pwm, sequence):
+def tf_score(pwm, sequence):
     """
     param pwm: A Position Weight Matrix
     param sequence: A DNA sequence
-    returns: A list with TF probability each word in the sequence with a score > 0 
+    returns: A list with TF score for each word in the sequence
     """
     matrix_length = len(pwm['A'])
     sequence_length = len(sequence)

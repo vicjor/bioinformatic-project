@@ -2,11 +2,18 @@
 import react, {useEffect, useState} from 'react'
 import Charts from './Charts'
 
-
+let URL;
+if (process.env.NODE_ENV === "development") {
+    URL = process.env.REACT_APP_URL;
+    console.log(URL);
+} else {
+    URL = "http://tfbs-backend.herokuapp.com/";
+}
 const DisplayResults = (props) => {
     const [response, setResponse] = useState()
     const [loaded, setLoaded] = useState(false)
-
+    
+    
 
     useEffect(() => {
         fetch_scores()
@@ -20,9 +27,9 @@ const DisplayResults = (props) => {
     async function fetch_scores(){
         let res = {}
         for(let i = 0; i < props.matrices.length; i++){
-            await fetch(`http://tfbs-backend.herokuapp.com/score/${props.matrices[i]}?sequence=${props.sequence}`)
+            await fetch(`${URL}score/${props.matrices[i]}?sequence=${props.sequence}`)
                 .then((response) => (response.json()))
-                .then((response) => res[props.matrices[i]] = response['probability'])
+                .then((response) => res[props.matrices[i]] = response['score'])
         }
         setResponse(res)
     }
