@@ -4,18 +4,21 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField'
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-let URL;
+const URL = "http://tfbs-backend.herokuapp.com/";
+/*
 if (process.env.NODE_ENV === "development") {
     URL = process.env.REACT_APP_URL;
     console.log(URL);
 } else {
     URL = "http://tfbs-backend.herokuapp.com/";
 }
-
+*/
 const ChooseBindings = (props) => {
     const [matrices, setMatrices] = useState(0)
 
@@ -30,10 +33,11 @@ const ChooseBindings = (props) => {
             .then((response) => response.json())
             .then((response) => {setResponse(response)})
     }
-    
-    const handleChange = (event) => {
-        props.setChosenMatrices(event.target.value);
-    };
+
+    function handleChange(value){
+        props.setChosenMatrices(value);
+    }
+
 
     // TODO: Denne bruker alt for lang tid på å åpne. Bedre å bruke autocomplete, https://material-ui.com/components/autocomplete/
     // bør ideelt kunne søke, men det er sikkert ikke så veldig nøye hvis det er stress å fikse
@@ -42,25 +46,15 @@ const ChooseBindings = (props) => {
             <br />
             { matrices !== 0 ? 
             <FormControl fullWidth>
-                <InputLabel id="choose-binding-label">Velg bindinger</InputLabel>
-                <Select
-                    labelId="choose-binding-select-label"
-                    id="choose-binding-select"
-                    multiple
-                    value={props.chosenMatrices}
-                    onChange={handleChange}
-                    input={<Input />}
-                    renderValue={(selected) => selected.join(', ')}
-                    MenuProps={MenuProps}
-                >
-                     {matrices['matrices_ids'].map((key, index) => (
-                         <MenuItem key={key} value={key}>
-                             <Checkbox checked={props.chosenMatrices.indexOf(key) > -1} />
-                             <ListItemText primary={key} />
-                         </MenuItem>
-                     ))}
-
-                </Select>
+                 <Autocomplete
+                id="choose-binding-label"
+                options={matrices['matrices_ids'].sort()}
+                style={{ width: 300 }}
+                onChange={(event, value) => handleChange(value)}
+                value={props.chosenMatrices}
+                multiple
+                renderInput={(params) => <TextField {...params} label="Velg bindinger" variant="outlined" />}
+                />
             </FormControl>
             : <p>Laster...</p>}
         </div>

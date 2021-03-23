@@ -2,13 +2,16 @@
 import react, {useEffect, useState} from 'react'
 import Charts from './Charts'
 
-let URL;
+const URL = "http://tfbs-backend.herokuapp.com/"
+/*
 if (process.env.NODE_ENV === "development") {
     URL = process.env.REACT_APP_URL;
     console.log(URL);
 } else {
     URL = "http://tfbs-backend.herokuapp.com/";
 }
+*/
+
 const DisplayResults = (props) => {
     const [response, setResponse] = useState()
     const [loaded, setLoaded] = useState(false)
