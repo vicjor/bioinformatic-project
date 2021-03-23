@@ -37,7 +37,7 @@ const DisplayResults = (props) => {
 
     return(
         <div>
-            {loaded ? <Charts res={response}/> : <p>Laster...</p>}
+            {loaded ? <Charts res={response} sequence={props.sequence}/> : <p>Laster...</p>}
         </div>
     )
 }
