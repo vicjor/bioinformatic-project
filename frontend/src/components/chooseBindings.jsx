@@ -39,8 +39,6 @@ const ChooseBindings = (props) => {
     }
 
 
-    // TODO: Denne bruker alt for lang tid på å åpne. Bedre å bruke autocomplete, https://material-ui.com/components/autocomplete/
-    // bør ideelt kunne søke, men det er sikkert ikke så veldig nøye hvis det er stress å fikse
     return(
         <div>
             <br />
