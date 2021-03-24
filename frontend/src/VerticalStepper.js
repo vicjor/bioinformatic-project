@@ -16,7 +16,7 @@ import ChooseDNA from './components/chooseDNA';
 export default function VerticalStepper() {
 
     const [chosenMatrices, setChosenMatrices] = useState([])
-    const [chosenDNAsequences, setChosenDNAsequences] = useState("")
+    const [chosenDNAsequence, setChosenDNAsequence] = useState("")
 
     const [activeStep, setActiveStep] = useState(0)
     const steps = getSteps()
@@ -29,17 +29,17 @@ export default function VerticalStepper() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    // TODO: Denne blir oppdatert hvis man går tilbake et step. Det bør nok endres hehe
+
     const getJSX = (step) => {
         switch(step){
             case 0:
                 return <ChooseBindings chosenMatrices={chosenMatrices} setChosenMatrices={setChosenMatrices} />
             case 1:
-                return <ChooseDNA chosenDNAsequences={chosenDNAsequences} setChosenDNAsequences={setChosenDNAsequences} />
+                return <ChooseDNA chosenDNAsequence={chosenDNAsequence} setChosenDNAsequence={setChosenDNAsequence} />
             case 2:
-                return <DisplayResults matrices={chosenMatrices} sequence={chosenDNAsequences}/>
+                return <DisplayResults matrices={chosenMatrices} sequence={chosenDNAsequence}/>
             default:
-                return <p>Ugh. Det har oppstått en feilg</p>
+                return <p>Ugh. Det har oppstått en feil</p>
         }
     }
 
