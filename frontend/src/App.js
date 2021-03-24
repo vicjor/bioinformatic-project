@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h3>Mapping known transcription factor binding sites</h3>
+        <h3>TFBM Predictor</h3>
       </header>
       <Grid 
         container
