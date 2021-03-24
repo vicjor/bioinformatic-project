@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h3>TFBM Predictor</h3>
+        <h3>BS Predictor for TFs</h3>
       </header>
       <Grid 
         container
