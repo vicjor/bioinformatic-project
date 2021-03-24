@@ -83,22 +83,21 @@ export default function VerticalStepper() {
 // TODO: Skriv om disse så de blir riktige
 
 function getSteps() {
-  return ['Velg bindinger', 'Skriv inn DNA sekvenser', 'Se resultat'];
+  return ['Velg bindinger', 'Skriv inn en DNA sekvens', 'Se resultat'];
 }
 
 function getStepContent(step) {
   switch (step) {
     case 0:
       return `Velg hvilke matriser/bindinger du vil sjekke om det eksisterer 
-              spesielle DNA sekvenser i. Du kan velge flere bindinger her. Vi 
-              bør skrive noe fett her. Det som står nå er bare bull `;
+              spesielle DNA sekvenser i. Du kan velge flere bindinger her.
+              Eksempelvis: MA0001.1, PF0076.1, UN0360.1 ...  `;
     case 1:
-      return `Skriv inn DNA sekvenser du vil sjekke. Du kan skrive inne flere 
-              sekvenser ved å ha et komma i mellom sekvensene. Tips: du kan bruke
-              random DNA generators`;
+      return `Skriv inn en DNA sekvens du vil sjekke. Tillatte tegn er [a, c, g, t].
+              Tips: du kan bruke random DNA generators`;
     case 2:
-      return `Her er resultatet. Du ser grafer for hver binding sjekket mot hver 
-              DNA sekvens om sekvensen eksisterer i bindingen. Er du ikke førnøyd 
+      return `Her er resultatet. Du ser grafer for hver binding sjekket mot 
+              DNA-sekvensen for om sekvensen eksisterer i bindingen. Er du ikke førnøyd 
               med resultatet, er det bare å gå tilbake å teste med noen andre 
               bindinger eller sekvenser`;
     default:
